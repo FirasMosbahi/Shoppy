@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./home-screen.css";
+import Copyrights from "../components/copyrights";
 
 export default function HomeScreen() {
   return (
@@ -90,14 +91,7 @@ export default function HomeScreen() {
           </div>
         </div>
       </section>
-      <footer className="py-5 bg-dark">
-        <div className="container px-5">
-          <p className="m-0 text-center text-white">
-            Copyright &copy; Shoppy :Firas Mosbahi, Ahmed Aziz Bousaid , Amine
-            Chaabini
-          </p>
-        </div>
-      </footer>
+      <Copyrights />
     </div>
   );
 }
