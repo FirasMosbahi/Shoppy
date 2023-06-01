@@ -2,8 +2,15 @@ import React from "react";
 import FileUploadInput from "../components/file-upload-input";
 import "./add-products-screen.css";
 import "./home-screen.css";
+import axiosFetch from "../hooks/fetch-api";
+import uploadToImgur from "../utilities/upload-to-imgur";
 
 export default function AddProductScreen() {
+  let [result, setResult] = React.useState({
+    loading: false,
+    result: false,
+    error: false,
+  });
   const [productData, setProductData] = React.useState({
     name: null,
     description: null,
@@ -15,6 +22,7 @@ export default function AddProductScreen() {
     description: null,
     price: null,
     photo: null,
+    quantity: 100,
   });
   const onChange = (e) => {
     const { name, value } = e.target;
@@ -27,14 +35,11 @@ export default function AddProductScreen() {
   const fileUploadInputOnChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const resultValue = reader.result;
-        console.log(resultValue.length);
-        setProductData((prevState) => ({ ...prevState, photo: resultValue }));
-        setProductDataErrors((prevState) => ({ ...prevState, photo: null }));
-      };
-      reader.readAsDataURL(file);
+      const formData = new FormData();
+      formData.append("image", file);
+      const imageLink = uploadToImgur(formData);
+      setProductData((prevState) => ({ ...prevState, photo: imageLink }));
+      setProductDataErrors((prevState) => ({ ...prevState, photo: null }));
     } else {
       setProductDataErrors((prevState) => ({
         ...prevState,
@@ -42,7 +47,7 @@ export default function AddProductScreen() {
       }));
     }
   };
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     let errors = false;
     if (!productData.name) {
@@ -76,7 +81,13 @@ export default function AddProductScreen() {
     if (errors) {
       return;
     }
-    //TODO: handle creating product
+    setResult((prevState) => ({ ...prevState, loading: true }));
+    let state = await axiosFetch(
+      "http://localhost:5000/product",
+      "post",
+      productData
+    );
+    setResult({ result: state.result, error: state.error, loading: false });
   };
   return (
     <div>
@@ -155,6 +166,13 @@ export default function AddProductScreen() {
           </button>
         </form>
       </div>
+      <p>
+        {result.error
+          ? "an error has occured"
+          : result.result
+          ? "item added successfuly"
+          : "please wait ..."}
+      </p>
     </div>
   );
 }

@@ -1,12 +1,18 @@
 import React from "react";
 import Item from "../components/item";
+import axiosFetch from "../hooks/fetch-api";
 
 export default function ShopScreen() {
   const [products, setProducts] = React.useState(null);
-  const fetchProducts = async () => {
-    //TODO:handle fetching products
-  };
-  React.useEffect(() => {});
+
+  React.useEffect(() => {
+    let response;
+    const load = async () => {
+      response = await axiosFetch("http://localhost:5000/product", "get");
+      setProducts(response.response);
+    };
+    load();
+  }, []);
   return (
     <div className="shop">
       <header className="bg-dark py-5">

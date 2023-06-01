@@ -1,10 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import "./item.css";
 
 export default function Item({ id, name, description, price, photo }) {
   return (
-    <div className="col mb-5">
-      <div className="card h-100">
+    <div className="col mb-2 item">
+      <div className="card h-25">
         <img className="card-img-top" src={photo} alt="product image" />
         <div className="card-body p-4">
           <div className="text-center">
