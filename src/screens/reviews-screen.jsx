@@ -2,25 +2,25 @@ import React from "react";
 import Review from "../components/review";
 import ReviewForm from "../components/add-review-form";
 import "./home-screen.css";
+import AppHeader from "../components/app-header";
+import axiosFetch from "../hooks/fetch-api";
 export default function ReviewsScreen() {
   const [reviews, setReviews] = React.useState(null);
-  const fetchReviews = async () => {
-    //TODO:handle fetching reviews
-  };
-  React.useEffect(() => {});
+
+  React.useEffect(() => {
+    const load = async () => {
+      const response = await axiosFetch("http://localhost:5000/reviews", "get");
+      setReviews(response.response);
+    };
+    load();
+  }, []);
   return (
     <div>
-      <header className="bg-dark py-5">
-        <div className="container px-4 px-lg-5 my-5">
-          <div className="text-center text-white">
-            <h1 className="display-4 fw-bolder">Users Reviews</h1>
-            <p className="lead fw-normal text-white-50 mb-0">
-              Dear Clients, here you can find other users reviews, you can also
-              add your own
-            </p>
-          </div>
-        </div>
-      </header>
+      <AppHeader
+        title="Users Reviews"
+        content="Dear Clients, here you can find other users reviews, you can also
+              add your own"
+      />
       <section className="py-5">
         <ReviewForm />
         <div className="container px-4 px-lg-5 mt-5">
@@ -28,9 +28,9 @@ export default function ReviewsScreen() {
             {reviews ? (
               reviews.map((review) => (
                 <Review
-                  user={review.user}
+                  user={review.owner.mail}
                   comment={review.comment}
-                  date={review.date}
+                  date={new Date(review.createdAt).toLocaleDateString()}
                 />
               ))
             ) : (

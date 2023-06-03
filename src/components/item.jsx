@@ -4,7 +4,7 @@ import "./item.css";
 
 export default function Item({ id, name, description, price, photo }) {
   return (
-    <div className="col mb-2 item">
+    <div className="col mb-5 item">
       <div className="card h-25">
         <img className="card-img-top" src={photo} alt="product image" />
         <div className="card-body p-4">

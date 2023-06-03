@@ -4,6 +4,8 @@ import "./add-products-screen.css";
 import "./home-screen.css";
 import axiosFetch from "../hooks/fetch-api";
 import uploadToImgur from "../utilities/upload-to-imgur";
+import AppHeader from "../components/app-header";
+import { Form } from "react-router-dom";
 
 export default function AddProductScreen() {
   let [result, setResult] = React.useState({
@@ -35,10 +37,7 @@ export default function AddProductScreen() {
   const fileUploadInputOnChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const formData = new FormData();
-      formData.append("image", file);
-      const imageLink = uploadToImgur(formData);
-      setProductData((prevState) => ({ ...prevState, photo: imageLink }));
+      setProductData((prevState) => ({ ...prevState, photo: file }));
       setProductDataErrors((prevState) => ({ ...prevState, photo: null }));
     } else {
       setProductDataErrors((prevState) => ({
@@ -82,31 +81,24 @@ export default function AddProductScreen() {
       return;
     }
     setResult((prevState) => ({ ...prevState, loading: true }));
+    const formData = new FormData();
+
+    for (const key in productData) {
+      formData.append(key, productData[key]);
+    }
     let state = await axiosFetch(
       "http://localhost:5000/product",
       "post",
-      productData
+      formData
     );
     setResult({ result: state.result, error: state.error, loading: false });
   };
   return (
     <div>
-      <header className="bg-dark py-5">
-        <div className="container px-5">
-          <div className="row gx-5 justify-content-center">
-            <div className="col-lg-6">
-              <div className="text-center my-5">
-                <h1 className="display-5 fw-bolder text-white mb-2">
-                  Welcome dear admin
-                </h1>
-                <p className="lead text-white-50 mb-4">
-                  You can start adding products now
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
+      <AppHeader
+        title="Welcome dear admin"
+        content="You can start adding products now"
+      />
       <div className="card">
         <span className="title">Add a product</span>
         <form className="form-group">

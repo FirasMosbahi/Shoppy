@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { isValidEmail, isValidPassword } from "../utilities/submit-service";
 import "./login-screen.css";
+import axiosFetch from "../hooks/fetch-api";
 
 export default function RegisterScreen() {
   const [registerData, setRegisterData] = React.useState({
@@ -14,6 +15,7 @@ export default function RegisterScreen() {
     password: null,
     repeatedPassword: null,
   });
+  const [state, setState] = React.useState(null);
   const onChange = (e) => {
     const { name, value } = e.target;
     setRegisterData((prevState) => ({
@@ -22,7 +24,7 @@ export default function RegisterScreen() {
     }));
     setRegisterErrors((prevState) => ({ ...prevState, [name]: null }));
   };
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     let errors = false;
     if (!isValidEmail(registerData.mail)) {
@@ -49,7 +51,16 @@ export default function RegisterScreen() {
     if (errors) {
       return;
     } else {
-      //TODO:handle register
+      const result = await axiosFetch("http://localhost:5000/user", "post", {
+        mail: registerData.mail,
+        password: registerData.password,
+      });
+      setState(
+        result.error
+          ? "an error occured while creating user"
+          : "user created successfuly"
+      );
+      console.log(result.result);
     }
   };
   return (
@@ -110,6 +121,7 @@ export default function RegisterScreen() {
                   </p>
                 </Link>
               </form>
+              {state && <p>{state}</p>}
             </div>
           </div>
         </div>

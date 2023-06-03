@@ -2,8 +2,10 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { isValidEmail, isValidPassword } from "../utilities/submit-service";
 import "./login-screen.css";
+import axiosFetch from "../hooks/fetch-api";
 
 export default function LoginScreen() {
+  const [state, setState] = React.useState(null);
   const [loginData, setLoginData] = React.useState({
     mail: null,
     password: null,
@@ -20,7 +22,7 @@ export default function LoginScreen() {
     }));
     setLoginErrors((prevState) => ({ ...prevState, [name]: null }));
   };
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     let errors = false;
     if (!isValidEmail(loginData.mail)) {
@@ -41,7 +43,15 @@ export default function LoginScreen() {
     if (errors) {
       return;
     } else {
-      //TODO:handle login
+      const result = await axiosFetch(
+        "http://localhost:5000/user/login",
+        "post",
+        loginData
+      );
+      localStorage.setItem("userId", result.response.id);
+      localStorage.setItem("token", result.response.token);
+      console.log(localStorage.getItem("userId"));
+      setState(result.response);
     }
   };
   return (
@@ -88,6 +98,7 @@ export default function LoginScreen() {
                 </Link>
               </form>
             </div>
+            <p>{state ? "user logged in successfuly" : "failed to login"}</p>
           </div>
         </div>
       </div>

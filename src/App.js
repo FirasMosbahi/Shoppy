@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/navbar";
 import HomeScreen from "./screens/home-screen";
-import "./App.css";
+//import "./App.css";
 import LoginScreen from "./screens/login-screen";
 import RegisterScreen from "./screens/register-screen";
 import ItemDetailsScreen from "./screens/item-details-screen";

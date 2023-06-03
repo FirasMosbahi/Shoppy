@@ -1,11 +1,16 @@
 import React from "react";
 import "./add-review-form.css";
+import axiosFetch from "../hooks/fetch-api";
 
 export default function ReviewForm() {
-  const [review, setReview] = React.useState(null);
-  const onSubmit = (e) => {
+  const [review, setReview] = React.useState("");
+  const onSubmit = async (e) => {
     e.preventDefault();
-    //TODO: Handle submit
+    console.log(review);
+    await axiosFetch("http://localhost:5000/reviews", "post", {
+      comment: review,
+      ownerId: localStorage.getItem("userId"),
+    });
   };
   return (
     <div className="subscribe">
@@ -19,7 +24,9 @@ export default function ReviewForm() {
         onChange={(e) => setReview(e.target.value)}
       />
       <br />
-      <div className="submit-btn">SUBMIT</div>
+      <div className="submit-btn" onClick={onSubmit}>
+        SUBMIT
+      </div>
     </div>
   );
 }

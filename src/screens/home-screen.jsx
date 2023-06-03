@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./home-screen.css";
 import Copyrights from "../components/copyrights";
+import AppHeader from "../components/app-header";
 
 export default function HomeScreen() {
   return (
