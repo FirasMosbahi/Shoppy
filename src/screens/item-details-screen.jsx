@@ -1,14 +1,24 @@
 import React from "react";
 import { useSearchParams } from "react-router-dom";
+import axiosFetch from "../hooks/fetch-api";
 //import "./item-details-screen.css";
 
 export default function ItemDetailsScreen() {
   const [quantity, setQuantity] = React.useState(0);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [state, setState] = React.useState(null);
 
-  const onPurchase = (e) => {
+  const onPurchase = async (e) => {
     e.preventDefault();
-    //TODO : handle add to cart
+    const result = await axiosFetch(
+      "http://localhost:5000/cart/addProductToCart",
+      "post",
+      {
+        ownerId: localStorage.getItem("userId"),
+        productId: searchParams.get("id"),
+        quantity: quantity,
+      }
+    );
   };
   return (
     <div>

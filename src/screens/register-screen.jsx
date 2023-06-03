@@ -55,6 +55,9 @@ export default function RegisterScreen() {
         mail: registerData.mail,
         password: registerData.password,
       });
+      await axiosFetch("http://localhost:5000/cart", "post", {
+        ownerId: result.response.id,
+      });
       setState(
         result.error
           ? "an error occured while creating user"
